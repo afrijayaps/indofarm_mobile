@@ -92,9 +92,14 @@ class _AppColorTokens {
   static const googleOutlineVariant = Color(0xFFE8EAED);
   static const googleError = Color(0xFFD93025);
   static const googleErrorContainer = Color(0xFFFCE8E6);
+  static const googleJoyFilled = Color(0xFFFF7043);
+  static const googleJoyElevated = Color(0xFF4285F4);
+  static const googleJoyOutlined = Color(0xFF34A853);
+  static const googleJoyText = Color(0xFF8E63F8);
+  static const googleJoyFab = Color(0xFFF9AB00);
 }
 
-enum AppThemePreset { goldDark, goldLight, googleClean }
+enum AppThemePreset { goldDark, goldLight, googleClean, googleJoy }
 
 class AppThemeBundle {
   const AppThemeBundle({
@@ -126,13 +131,14 @@ class AppTheme {
   static ThemeData get dynamicDarkTheme => _buildDynamicDarkTheme();
   static ThemeData get dynamicLightTheme => _buildDynamicLightTheme();
   static ThemeData get googleLightTheme => _buildGoogleLightTheme();
+  static ThemeData get googleJoyTheme => _buildGoogleJoyTheme();
   static ThemeData get darkTheme => dynamicDarkTheme;
   static ThemeData get lightTheme => dynamicLightTheme;
 
   static ThemeData dark() => darkTheme;
   static ThemeData light() => lightTheme;
 
-  static const defaultPreset = AppThemePreset.goldDark;
+  static const defaultPreset = AppThemePreset.goldLight;
   static List<AppThemePreset> get presets => AppThemePreset.values;
 
   static AppThemeBundle bundleFor(AppThemePreset preset) {
@@ -153,6 +159,12 @@ class AppTheme {
         return AppThemeBundle(
           theme: googleLightTheme,
           darkTheme: googleLightTheme,
+          mode: ThemeMode.light,
+        );
+      case AppThemePreset.googleJoy:
+        return AppThemeBundle(
+          theme: googleJoyTheme,
+          darkTheme: googleJoyTheme,
           mode: ThemeMode.light,
         );
     }
@@ -192,6 +204,18 @@ class AppTheme {
             _AppColorTokens.googleTertiary,
           ],
           icon: Icons.apps_rounded,
+        );
+      case AppThemePreset.googleJoy:
+        return const AppThemePresetMeta(
+          title: 'Google Joy',
+          subtitle: 'Clean white dengan tombol lebih ceria.',
+          previewColors: [
+            _AppColorTokens.googleJoyFilled,
+            _AppColorTokens.googleJoyElevated,
+            _AppColorTokens.googleJoyOutlined,
+            _AppColorTokens.googleJoyText,
+          ],
+          icon: Icons.palette_outlined,
         );
     }
   }
@@ -413,6 +437,78 @@ class AppTheme {
       iconSize: AppIconSize.md,
       inputContentPadding: const EdgeInsets.fromLTRB(16, 22, 16, 14),
       prefixIconConstraints: const BoxConstraints(minWidth: 54, minHeight: 54),
+    );
+  }
+
+  static ThemeData _buildGoogleJoyTheme() {
+    final baseTheme = _buildGoogleLightTheme();
+    final colorScheme = baseTheme.colorScheme;
+    final textTheme = baseTheme.textTheme;
+
+    return baseTheme.copyWith(
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          elevation: 0,
+          backgroundColor: _AppColorTokens.googleJoyElevated,
+          foregroundColor: Colors.white,
+          minimumSize: const Size.fromHeight(48),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          textStyle: textTheme.labelLarge?.copyWith(
+            fontWeight: FontWeight.w700,
+          ),
+          shape: const RoundedRectangleBorder(borderRadius: AppCorners.sm),
+        ),
+      ),
+      filledButtonTheme: FilledButtonThemeData(
+        style: FilledButton.styleFrom(
+          elevation: 0,
+          backgroundColor: _AppColorTokens.googleJoyFilled,
+          foregroundColor: Colors.white,
+          minimumSize: const Size.fromHeight(48),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          textStyle: textTheme.labelLarge?.copyWith(
+            fontWeight: FontWeight.w700,
+          ),
+          shape: const RoundedRectangleBorder(borderRadius: AppCorners.sm),
+        ),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          foregroundColor: _AppColorTokens.googleJoyOutlined,
+          side: const BorderSide(
+            color: _AppColorTokens.googleJoyOutlined,
+            width: 1.2,
+          ),
+          shape: const RoundedRectangleBorder(borderRadius: AppCorners.sm),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          textStyle: textTheme.labelLarge?.copyWith(
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          foregroundColor: _AppColorTokens.googleJoyText,
+          iconColor: _AppColorTokens.googleJoyText,
+          iconSize: AppIconSize.sm,
+          textStyle: textTheme.labelLarge?.copyWith(
+            fontWeight: FontWeight.w700,
+          ),
+          shape: const RoundedRectangleBorder(borderRadius: AppCorners.sm),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        ),
+      ),
+      chipTheme: baseTheme.chipTheme.copyWith(
+        selectedColor: _AppColorTokens.googleJoyFab.withValues(alpha: 0.18),
+        backgroundColor: colorScheme.surfaceContainerHigh,
+        labelStyle: textTheme.labelMedium?.copyWith(
+          color: colorScheme.onSurface,
+        ),
+      ),
+      floatingActionButtonTheme: const FloatingActionButtonThemeData(
+        backgroundColor: _AppColorTokens.googleJoyFab,
+        foregroundColor: Color(0xFF1F1F1F),
+      ),
     );
   }
 

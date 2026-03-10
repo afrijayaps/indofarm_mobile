@@ -67,17 +67,15 @@ void main() {
     expect(find.text('Gold Dark'), findsOneWidget);
     expect(find.text('Gold Light'), findsOneWidget);
     expect(find.text('Google Clean'), findsOneWidget);
-    expect(container.read(themeControllerProvider), AppThemePreset.goldDark);
+    expect(find.text('Google Joy'), findsOneWidget);
+    expect(container.read(themeControllerProvider), AppThemePreset.goldLight);
 
-    await tester.tap(find.text('Google Clean'));
+    await tester.tap(find.text('Google Joy'));
     await tester.pumpAndSettle();
 
-    expect(container.read(themeControllerProvider), AppThemePreset.googleClean);
+    expect(container.read(themeControllerProvider), AppThemePreset.googleJoy);
 
     final prefs = await SharedPreferences.getInstance();
-    expect(
-      prefs.getString('app_theme_preset'),
-      AppThemePreset.googleClean.name,
-    );
+    expect(prefs.getString('app_theme_preset'), AppThemePreset.googleJoy.name);
   });
 }
