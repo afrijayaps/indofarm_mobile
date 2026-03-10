@@ -5,6 +5,7 @@ import '../core/config/app_config.dart';
 import '../core/network/api_client.dart';
 import '../core/storage/local_database.dart';
 import '../core/storage/session_storage.dart';
+import '../core/storage/theme_storage.dart';
 import '../core/storage/token_store.dart';
 import '../data/local/recording_local_data_source.dart';
 import '../data/local/sync_local_data_source.dart';
@@ -24,7 +25,10 @@ final tokenStoreProvider = Provider<TokenStore>((ref) => TokenStore());
 
 final httpClientProvider = Provider<http.Client>((ref) => http.Client());
 
-final sessionStorageProvider = Provider<SessionStorage>((ref) => SessionStorage());
+final sessionStorageProvider = Provider<SessionStorage>(
+  (ref) => SessionStorage(),
+);
+final themeStorageProvider = Provider<ThemeStorage>((ref) => ThemeStorage());
 
 final databaseProvider = Provider<Future<LocalDatabase>>((ref) {
   return LocalDatabase.open();
@@ -51,7 +55,9 @@ final recordingApiProvider = Provider<RecordingApi>((ref) {
   return RecordingApi(ref.watch(apiClientProvider));
 });
 
-final recordingLocalDataSourceProvider = Provider<RecordingLocalDataSource>((ref) {
+final recordingLocalDataSourceProvider = Provider<RecordingLocalDataSource>((
+  ref,
+) {
   return RecordingLocalDataSource(ref.watch(databaseProvider));
 });
 

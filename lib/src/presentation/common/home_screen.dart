@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../application/auth/auth_controller.dart';
+import '../../core/theme/app_theme.dart';
 import '../dashboard/dashboard_screen.dart';
+import '../inventory/inventory_placeholder_screen.dart';
 import '../profile/profile_screen.dart';
 import '../recordings/recording_form_screen.dart';
+import 'widgets/if_primitives.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -23,34 +26,63 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     final pages = <Widget>[
       const DashboardScreen(),
-      canInput
-          ? const RecordingFormScreen()
-          : const _NoInputAccessScreen(),
+      canInput ? const RecordingFormScreen() : const _NoInputAccessScreen(),
+      const InventoryPlaceholderScreen(),
       const ProfileScreen(),
     ];
 
     return Scaffold(
       body: SafeArea(child: pages[_currentIndex]),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _currentIndex,
-        onDestinationSelected: (value) => setState(() => _currentIndex = value),
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home),
-            label: 'Dashboard',
+      bottomNavigationBar: SafeArea(
+        minimum: const EdgeInsets.fromLTRB(12, 0, 12, 10),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: AppCorners.lg,
+            border: Border.all(
+              color: Theme.of(
+                context,
+              ).colorScheme.outlineVariant.withValues(alpha: 0.8),
+            ),
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 18,
+                offset: const Offset(0, 8),
+                color: Colors.black.withValues(alpha: 0.08),
+              ),
+            ],
           ),
-          NavigationDestination(
-            icon: Icon(Icons.assignment_outlined),
-            selectedIcon: Icon(Icons.assignment),
-            label: 'Input',
+          child: ClipRRect(
+            borderRadius: AppCorners.lg,
+            child: NavigationBar(
+              selectedIndex: _currentIndex,
+              onDestinationSelected: (value) =>
+                  setState(() => _currentIndex = value),
+              destinations: const [
+                NavigationDestination(
+                  icon: Icon(Icons.dashboard_outlined),
+                  selectedIcon: Icon(Icons.dashboard),
+                  label: 'Dashboard',
+                ),
+                NavigationDestination(
+                  icon: Icon(Icons.edit_note_outlined),
+                  selectedIcon: Icon(Icons.edit_note),
+                  label: 'Input',
+                ),
+                NavigationDestination(
+                  icon: Icon(Icons.inventory_2_outlined),
+                  selectedIcon: Icon(Icons.inventory_2),
+                  label: 'Inventory',
+                ),
+                NavigationDestination(
+                  icon: Icon(Icons.person_outline),
+                  selectedIcon: Icon(Icons.person),
+                  label: 'Profile',
+                ),
+              ],
+            ),
           ),
-          NavigationDestination(
-            icon: Icon(Icons.account_circle_outlined),
-            selectedIcon: Icon(Icons.account_circle),
-            label: 'Profile',
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -61,24 +93,13 @@ class _NoInputAccessScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        margin: const EdgeInsets.all(16),
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          color: Theme.of(context).colorScheme.surface,
-        ),
-        child: const Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.lock_outline, size: 36),
-            SizedBox(height: 12),
-            Text(
-              'Role ini tidak memiliki akses input recording.',
-              textAlign: TextAlign.center,
-            ),
-          ],
+    return Padding(
+      padding: const EdgeInsets.all(AppSpacing.md),
+      child: Center(
+        child: IFEmptyState(
+          icon: Icons.lock_outline,
+          title: 'Role ini tidak memiliki akses input recording.',
+          message: '',
         ),
       ),
     );
